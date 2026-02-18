@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import gsap from "gsap";
 
 import Navbar from "../components/Navbar";
 import LogForm from "../components/LogForm";
 import EditLog from "../components/EditLog";
 import LogList from "../components/LogList";
 import initialLogs from "../index";
+import PageLoader from "../components/PageLoader";
 
 const Dashboard = () => {
   const [logs, setLogs] = useState(() => {
@@ -42,34 +44,80 @@ const Dashboard = () => {
   };
 
   const handleLogEdit = (log) => {
-      setTitle(log.title);
-      setDescription(log.description);
-      setEditingLogId(log.id);
-      setEditLog(true);
-  }
+    setTitle(log.title);
+    setDescription(log.description);
+    setEditingLogId(log.id);
+    setEditLog(true);
+  };
 
   const updateLog = () => {
-  const updatedLogs = logs.map((log) =>
-    log.id === editingLogId
-      ? { ...log, title, description }
-      : log
-  );
+    const updatedLogs = logs.map((log) =>
+      log.id === editingLogId ? { ...log, title, description } : log,
+    );
 
-  setLogs(updatedLogs);
-  localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
+    setLogs(updatedLogs);
+    localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
 
-  setEditLog(false);
-  setEditingLogId(null);
-  setTitle("");
-  setDescription("");
-};
+    setEditLog(false);
+    setEditingLogId(null);
+    setTitle("");
+    setDescription("");
+  };
 
-const deleteLog = (id) => {
-  const updatedLogs = logs.filter((log) => log.id !== id);
-  setLogs(updatedLogs);
-  localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
-};
+  const deleteLog = (id) => {
+    const updatedLogs = logs.filter((log) => log.id !== id);
+    setLogs(updatedLogs);
+    localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
+  };
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!loading && logs.length > 0) {
+      gsap.fromTo(
+        ".card",
+        {
+          opacity: 0,
+          y: 30,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.12,
+          ease: "power2.out",
+        },
+      );
+    }
+  }, [loading, logs]);
+
+  useEffect(() => {
+    if (!loading) {
+      gsap.fromTo(
+        ".navbar",
+        {
+          y: -80,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out",
+        },
+      );
+    }
+  }, [loading]);
+
+  if (loading) return <PageLoader />;
 
   return (
     <div>
@@ -103,7 +151,14 @@ const deleteLog = (id) => {
           updateLog={updateLog}
         />
         {logs.length > 0 ? (
-          <LogList logs={logs} deleteLog={deleteLog} editLog={editLog} setEditLog={setEditLog} handleLogEdit={handleLogEdit} />
+          <LogList
+            logs={logs}
+            deleteLog={deleteLog}
+            editLog={editLog}
+            setEditLog={setEditLog}
+            handleLogEdit={handleLogEdit}
+            className="card"
+          />
         ) : (
           <div>
             <p className="text-gray-600 text-center mt-10">

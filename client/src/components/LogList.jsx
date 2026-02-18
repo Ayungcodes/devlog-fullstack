@@ -4,7 +4,7 @@ const LogList = ({ logs, deleteLog, handleLogEdit }) => {
       {logs.map((log) => (
         <div
           key={log.id}
-          className="group bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-[2px]"
+          className="card group bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-[2px]"
         >
           {/* title and description */}
           <div className="flex items-start justify-between">
