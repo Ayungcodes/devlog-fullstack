@@ -1,4 +1,4 @@
-const LogList = ({ logs, deleteLog }) => {
+const LogList = ({ logs, deleteLog, handleLogEdit }) => {
   return (
     <div className="space-y-4">
       {logs.map((log) => (
@@ -6,7 +6,7 @@ const LogList = ({ logs, deleteLog }) => {
           key={log.id}
           className="group bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-[2px]"
         >
-            {/* title and description */}
+          {/* title and description */}
           <div className="flex items-start justify-between">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">
@@ -34,7 +34,12 @@ const LogList = ({ logs, deleteLog }) => {
               Delete
             </button>
 
-            <button className="text-gray-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 transition">
+            <button
+              onClick={() => {
+                handleLogEdit(log);
+              }}
+              className="text-gray-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 transition"
+            >
               Edit
             </button>
 

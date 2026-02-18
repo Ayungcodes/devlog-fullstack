@@ -8,7 +8,7 @@ const Navbar = ({ openLog, setOpenLog }) => {
     year: "numeric",
   });
   return (
-    <nav className="fixed top-0 left-0 w-full flex items-center justify-between bg-white px-3 py-5 shadow-md rounded-b-xl">
+    <nav className="fixed top-0 left-0 w-full flex items-center justify-between bg-white px-3 py-5 shadow-md rounded-b-xl z-50">
       <NavLink to="/" className="text-xl font-bold text-gray-800">
         DevLog
       </NavLink>
