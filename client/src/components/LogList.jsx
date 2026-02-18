@@ -29,7 +29,7 @@ const LogList = ({ logs, deleteLog, handleLogEdit }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => deleteLog(log.id)}
-              className="text-red-500 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition"
+              className="text-red-500 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition cursor-pointer"
             >
               Delete
             </button>
@@ -38,12 +38,12 @@ const LogList = ({ logs, deleteLog, handleLogEdit }) => {
               onClick={() => {
                 handleLogEdit(log);
               }}
-              className="text-gray-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 transition"
+              className="text-gray-700 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer"
             >
               Edit
             </button>
 
-            <button className="ml-auto text-sm font-medium bg-black text-white px-4 py-1.5 rounded-lg hover:opacity-90 transition">
+            <button className="ml-auto text-sm font-medium bg-black text-white px-4 py-1.5 rounded-lg duration-300 hover:opacity-90 transition cursor-pointer">
               View Details
             </button>
           </div>

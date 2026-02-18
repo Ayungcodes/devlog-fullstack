@@ -14,10 +14,6 @@ const Dashboard = () => {
   const [openLog, setOpenLog] = useState(false);
   const [editLog, setEditLog] = useState(false);
   const [editingLogId, setEditingLogId] = useState(null);
-  
-  const deleteLog = (id) => {
-    setLogs(logs.filter((log) => log.id !== id));
-  };
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -66,6 +62,12 @@ const Dashboard = () => {
   setEditingLogId(null);
   setTitle("");
   setDescription("");
+};
+
+const deleteLog = (id) => {
+  const updatedLogs = logs.filter((log) => log.id !== id);
+  setLogs(updatedLogs);
+  localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
 };
 
 
