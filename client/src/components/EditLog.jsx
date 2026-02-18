@@ -19,7 +19,7 @@ const EditLog = ({ editLog, setEditLog, title, setTitle, description, setDescrip
             <button
               type="button"
               onClick={() => setEditLog(false)}
-              className="text-gray-500 hover:text-black text-xl"
+              className="text-gray-500 hover:text-black text-xl cursor-pointer transition duration-200"
             >
               ✕
             </button>
@@ -46,7 +46,7 @@ const EditLog = ({ editLog, setEditLog, title, setTitle, description, setDescrip
           {/* submit */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-lg hover:opacity-90 transition"
+            className="w-full bg-black text-white py-2 rounded-lg hover:opacity-90 transition duration-200 cursor-pointer"
           >
             Edit Log
           </button>

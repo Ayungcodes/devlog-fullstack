@@ -27,7 +27,7 @@ const LogForm = ({
             <button
               type="button"
               onClick={() => setOpenLog(!openLog)}
-              className="text-gray-500 hover:text-black text-xl"
+              className="text-gray-500 hover:text-black text-xl cursor-pointer transition duration-200"
             >
               ✕
             </button>
@@ -54,7 +54,7 @@ const LogForm = ({
           {/* submit */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-lg hover:opacity-90 transition"
+            className="w-full bg-black text-white py-2 rounded-lg hover:opacity-90 transition cursor-pointer duration-200"
           >
             Add Log
           </button>

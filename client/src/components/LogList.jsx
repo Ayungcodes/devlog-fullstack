@@ -12,7 +12,7 @@ const LogList = ({ logs, deleteLog, handleLogEdit }) => {
               <h3 className="text-lg font-semibold text-gray-900">
                 {log.title}
               </h3>
-              <p className="text-gray-600 mt-1 leading-relaxed">
+              <p className="text-gray-600 text-[15px] mt-1 leading-relaxed">
                 {log.description}
               </p>
             </div>

@@ -121,10 +121,10 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Navbar openLog={openLog} setOpenLog={setOpenLog} />
+      <Navbar openLog={openLog} setOpenLog={setOpenLog} editLog={editLog} />
       <div className="mt-20 px-3 py-5">
         <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-gray-600 mt-0.5">
+        <p className="text-gray-600 text-[15px] mt-0.5">
           Welcome to your DevLog dashboard.
         </p>
       </div>
