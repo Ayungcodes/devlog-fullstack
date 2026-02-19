@@ -22,6 +22,8 @@ const Dashboard = () => {
   const [openLog, setOpenLog] = useState(false);
   const [editLog, setEditLog] = useState(false);
   const [editingLogId, setEditingLogId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [fetching, setFetching] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -32,11 +34,30 @@ const Dashboard = () => {
   }, []);
 
   const loadLogs = async () => {
-    const fetchedLogs = await getLogs();
-    console.log("Logs from server:", fetchedLogs);
-    if (fetchedLogs) {
-      setLogs(fetchedLogs);
-      localStorage.setItem("devlogs", JSON.stringify(fetchedLogs));
+    setFetching(true);
+
+    const startTime = Date.now();
+
+    try {
+      const fetchedLogs = await getLogs();
+
+      if (fetchedLogs) {
+        setLogs(fetchedLogs);
+        localStorage.setItem("devlogs", JSON.stringify(fetchedLogs));
+      }
+    } catch (error) {
+      console.error("Failed to load logs:", error);
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const minimumDelay = 4000;
+
+      const remainingTime = minimumDelay - elapsed;
+
+      if (remainingTime > 0) {
+        setTimeout(() => setFetching(false), remainingTime);
+      } else {
+        setFetching(false);
+      }
     }
   };
 
@@ -91,8 +112,28 @@ const Dashboard = () => {
     }
   };
 
-  const [loading, setLoading] = useState(true);
+  // fetching loader animation
+  useEffect(() => {
+    if (!loading && !fetching && logs.length > 0) {
+      gsap.fromTo(
+        ".card",
+        {
+          opacity: 0,
+          y: 20,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: "power2.out",
+          overwrite: "auto",
+        },
+      );
+    }
+  }, [loading, fetching, logs.length]);
 
+  // initial page load animation
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -101,6 +142,7 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // animate logs and navbar on load
   useEffect(() => {
     if (!loading && logs.length > 0) {
       gsap.fromTo(
@@ -171,7 +213,12 @@ const Dashboard = () => {
           setDescription={setDescription}
           updateLog={updateLog}
         />
-        {logs.length > 0 ? (
+        {fetching ? (
+          <div className="flex flex-col items-center justify-center mt-16">
+            <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin"></div>
+            <p className="text-gray-500 mt-3 text-sm">Loading logs...</p>
+          </div>
+        ) : logs.length > 0 ? (
           <LogList
             logs={logs}
             deleteLog={deleteLog}
@@ -181,15 +228,16 @@ const Dashboard = () => {
             className="card"
           />
         ) : (
-          <div>
-            <p className="text-gray-600 text-center mt-10">
-              No logs yet. Start by adding a new log!
+          <div className="text-center mt-16">
+            <p className="text-gray-600">
+              No logs yet. Start documenting your journey.
             </p>
+
             <button
               onClick={() => setOpenLog(true)}
-              className="bg-gray-900 text-white px-4 py-1 rounded-lg cursor-pointer hover:opacity-80 mx-auto block mt-4"
+              className="bg-gray-900 text-white px-4 py-2 rounded-lg mt-4 hover:opacity-80 transition"
             >
-              Add Log
+              Add Your First Log
             </button>
           </div>
         )}
