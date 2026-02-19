@@ -1,4 +1,10 @@
-let logs = {};
+let logs = [
+  {
+    id: 1,
+    title: "First Log",
+    description: "This is the first log entry.",
+  }
+];
 
 // GET /api/logs
 export const getLogs = (req, res) => {
@@ -7,7 +13,7 @@ export const getLogs = (req, res) => {
 
 // GET single log by id
 export const getLogById = (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = Number(req.params.id);
   const log = logs.find((log) => log.id === id);
 
   if (!log) {

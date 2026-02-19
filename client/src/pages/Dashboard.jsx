@@ -5,7 +5,13 @@ import Navbar from "../components/Navbar";
 import LogForm from "../components/LogForm";
 import EditLog from "../components/EditLog";
 import LogList from "../components/LogList";
-import initialLogs from "../index";
+import initialLogs from "../data";
+import {
+  createLog,
+  getLogs,
+  updateLogService,
+  deleteLogService,
+} from "../services";
 import PageLoader from "../components/PageLoader";
 
 const Dashboard = () => {
@@ -20,27 +26,33 @@ const Dashboard = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    loadLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loadLogs = async () => {
+    const fetchedLogs = await getLogs();
+    console.log("Logs from server:", fetchedLogs);
+    if (fetchedLogs) {
+      setLogs(fetchedLogs);
+      localStorage.setItem("devlogs", JSON.stringify(fetchedLogs));
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !description) return;
+    if (!title.trim() || !description.trim()) return;
 
-    const newLog = {
-      id: Date.now(),
-      title,
-      description,
-      date: new Date().toISOString().split("T")[0],
-    };
+    const newLog = await createLog(title, description);
 
-    console.log("Adding log:", newLog);
+    if (newLog) {
+      await loadLogs();
 
-    const updatedLogs = [newLog, ...logs];
-    setLogs(updatedLogs);
-    localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
-
-    // addLog(newLog);
-    setTitle("");
-    setDescription("");
-    setOpenLog(false);
+      setTitle("");
+      setDescription("");
+      setOpenLog(false);
+    }
   };
 
   const handleLogEdit = (log) => {
@@ -50,24 +62,33 @@ const Dashboard = () => {
     setEditLog(true);
   };
 
-  const updateLog = () => {
-    const updatedLogs = logs.map((log) =>
-      log.id === editingLogId ? { ...log, title, description } : log,
-    );
+  const updateLog = async () => {
+    const updatedData = { title, description };
 
-    setLogs(updatedLogs);
-    localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
+    const result = await updateLogService(editingLogId, updatedData);
 
-    setEditLog(false);
-    setEditingLogId(null);
-    setTitle("");
-    setDescription("");
+    if (result) {
+      const updatedLogs = logs.map((log) =>
+        log.id === editingLogId ? { ...log, ...updatedData } : log,
+      );
+      setLogs(updatedLogs);
+      localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
+
+      setEditLog(false);
+      setEditingLogId(null);
+      setTitle("");
+      setDescription("");
+    }
   };
 
-  const deleteLog = (id) => {
-    const updatedLogs = logs.filter((log) => log.id !== id);
-    setLogs(updatedLogs);
-    localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
+  const deleteLog = async (id) => {
+    const success = await deleteLogService(id);
+
+    if (success) {
+      const updatedLogs = logs.filter((log) => log.id !== id);
+      setLogs(updatedLogs);
+      localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
+    }
   };
 
   const [loading, setLoading] = useState(true);
