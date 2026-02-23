@@ -35,6 +35,7 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fetch logs from server with minimum 3 seconds loading time for better UX
   const loadLogs = async () => {
     setFetching(true);
 
@@ -63,6 +64,7 @@ const Dashboard = () => {
     }
   };
 
+  // create log
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
@@ -78,6 +80,7 @@ const Dashboard = () => {
     }
   };
 
+  // prepare log data for editing
   const handleLogEdit = (log) => {
     setTitle(log.title);
     setDescription(log.description);
@@ -85,6 +88,7 @@ const Dashboard = () => {
     setEditLog(true);
   };
 
+  // update log
   const updateLog = async (e) => {
     e.preventDefault();
     const updatedData = { title, description };
@@ -105,6 +109,7 @@ const Dashboard = () => {
     }
   };
 
+// delete log
   const deleteLog = async (id) => {
     const success = await deleteLogService(id);
 
@@ -115,8 +120,8 @@ const Dashboard = () => {
     }
   };
 
+  // filter logs based on search term
   const [searchTerm, setSearchTerm] = useState("");
-
   const filteredLogs = logs?.filter((log) => {
     const lowerSearchTerm = searchTerm.toLowerCase();
     return (
@@ -207,7 +212,7 @@ const Dashboard = () => {
 
       {/* search logs */}
       {logs.length > 0 && (
-        <div className="px-3">
+        <div className="search-bar px-3">
           <div className="relative max-w-md">
             <Search
               size={18}
