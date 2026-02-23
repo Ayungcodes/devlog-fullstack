@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import gsap from "gsap";
 
 const LogDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [log, setLog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ const LogDetails = () => {
     if (!loading && log) {
       gsap.from(".details-card", {
         y: 40,
-        opacity: 0,
+        opacity: 1,
         duration: 0.6,
         ease: "power2.out",
       });
@@ -52,30 +52,30 @@ const LogDetails = () => {
   if (!log) {
     return (
       <div className="text-center mt-20">
-        <p className="text-gray-600">Log not found.</p>
-        <button
-          onClick={() => navigate(-1)}
+        <p className="text-gray-900">Log not found.</p>
+        <NavLink
+          to="/"
           className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg"
         >
           Go Back
-        </button>
+        </NavLink>
       </div>
     );
   }
 
   return (
     <div className="max-w-3xl mx-auto px-4 mt-24">
-      <button
-        onClick={() => navigate(-1)}
-        className="text-sm text-gray-500 hover:text-black mb-6"
+      <NavLink
+        to="/"
+        className="text-sm text-gray-600 hover:text-black mb-6 cursor-pointer transition duration-200"
       >
         ← Back
-      </button>
+      </NavLink>
 
       <div className="details-card bg-white shadow-lg rounded-2xl p-6 border">
         <h1 className="text-2xl font-bold mb-2">{log.title}</h1>
 
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-gray-900 mb-6">
           {log.date || new Date().toISOString().split("T")[0]}
         </p>
 

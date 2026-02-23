@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import gsap from "gsap";
+import { FileText } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 import Navbar from "../components/Navbar";
 import LogForm from "../components/LogForm";
@@ -49,7 +51,7 @@ const Dashboard = () => {
       console.error("Failed to load logs:", error);
     } finally {
       const elapsed = Date.now() - startTime;
-      const minimumDelay = 4000;
+      const minimumDelay = 3000;
 
       const remainingTime = minimumDelay - elapsed;
 
@@ -83,7 +85,8 @@ const Dashboard = () => {
     setEditLog(true);
   };
 
-  const updateLog = async () => {
+  const updateLog = async (e) => {
+    e.preventDefault();
     const updatedData = { title, description };
 
     const result = await updateLogService(editingLogId, updatedData);
@@ -111,6 +114,16 @@ const Dashboard = () => {
       localStorage.setItem("devlogs", JSON.stringify(updatedLogs));
     }
   };
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredLogs = logs?.filter((log) => {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return (
+      log.title.toLowerCase().includes(lowerSearchTerm) ||
+      log.description.toLowerCase().includes(lowerSearchTerm)
+    );
+  });
 
   // fetching loader animation
   useEffect(() => {
@@ -185,12 +198,54 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar openLog={openLog} setOpenLog={setOpenLog} editLog={editLog} />
-      <div className="mt-20 px-3 py-5">
+      <div className="mt-20 px-3 lg:px-56 py-5">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-gray-600 text-[15px] mt-0.5">
           Welcome to your DevLog dashboard.
         </p>
       </div>
+
+      {/* search logs */}
+      {logs.length > 0 && (
+        <div className="px-3">
+          <div className="relative max-w-md">
+            <Search
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              type="text"
+              name="search"
+              id="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search logs..."
+              className="
+        w-full
+        pl-10 pr-10 py-2.5
+        text-sm
+        border border-gray-200
+        rounded-xl
+        bg-white
+        outline-none
+        transition-all duration-200
+        focus:border-gray-900
+        focus:ring-2 focus:ring-gray-900/10
+        placeholder:text-gray-400
+      "
+            />
+
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="max-w-3xl mx-auto px-3 py-6">
         {/* log form */}
@@ -220,22 +275,27 @@ const Dashboard = () => {
           </div>
         ) : logs.length > 0 ? (
           <LogList
-            logs={logs}
             deleteLog={deleteLog}
             editLog={editLog}
             setEditLog={setEditLog}
             handleLogEdit={handleLogEdit}
+            filteredLogs={filteredLogs}
             className="card"
           />
         ) : (
           <div className="text-center mt-16">
-            <p className="text-gray-600">
+            <FileText
+              size={40}
+              strokeWidth={1.5}
+              className="empty-icon mx-auto text-gray-400"
+            />
+            <p className="text-gray-600 mt-4">
               No logs yet. Start documenting your journey.
             </p>
 
             <button
               onClick={() => setOpenLog(true)}
-              className="bg-gray-900 text-white px-4 py-2 rounded-lg mt-4 hover:opacity-80 transition"
+              className="bg-gray-900 text-white px-4 py-1.5 rounded-lg mt-6 hover:opacity-80 transition cursor-pointer"
             >
               Add Your First Log
             </button>

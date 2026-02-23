@@ -1,10 +1,18 @@
-const LogList = ({ logs, deleteLog, handleLogEdit }) => {
+import { NavLink } from "react-router-dom";
+
+const LogList = ({ deleteLog, handleLogEdit, filteredLogs }) => {
+  const truncateText = (text, maxLength) => {
+    if (!text) return "";
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
+  };
   return (
     <div className="space-y-4">
-      {logs.map((log) => (
+      {filteredLogs.map((log) => (
         <div
           key={log.id}
-          className="card group bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-[2px]"
+          className="card group bg-white border border-gray-200 rounded-2xl p-5 shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-lg"
         >
           {/* title and description */}
           <div className="flex items-start justify-between">
@@ -13,7 +21,7 @@ const LogList = ({ logs, deleteLog, handleLogEdit }) => {
                 {log.title}
               </h3>
               <p className="text-gray-600 text-[15px] mt-1 leading-relaxed">
-                {log.description}
+                {truncateText(log.description, 130)}
               </p>
             </div>
 
@@ -43,9 +51,12 @@ const LogList = ({ logs, deleteLog, handleLogEdit }) => {
               Edit
             </button>
 
-            <button className="ml-auto text-sm font-medium bg-black text-white px-4 py-1.5 rounded-lg duration-300 hover:opacity-90 transition cursor-pointer">
+            <NavLink
+              to={`/logDetails/${log.id}`}
+              className="ml-auto text-sm font-medium bg-black text-white px-4 py-1.5 rounded-lg duration-300 hover:opacity-90 transition cursor-pointer"
+            >
               View Details
-            </button>
+            </NavLink>
           </div>
         </div>
       ))}

@@ -1,10 +1,4 @@
-let logs = [
-  {
-    id: 1,
-    title: "First Log",
-    description: "This is the first log entry.",
-  }
-];
+let logs = [];
 
 // GET /api/logs
 export const getLogs = (req, res) => {
