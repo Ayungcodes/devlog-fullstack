@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { FileText } from "lucide-react";
 import { Search, X } from "lucide-react";
@@ -109,7 +109,7 @@ const Dashboard = () => {
     }
   };
 
-// delete log
+  // delete log
   const deleteLog = async (id) => {
     const success = await deleteLogService(id);
 
@@ -122,13 +122,17 @@ const Dashboard = () => {
 
   // filter logs based on search term
   const [searchTerm, setSearchTerm] = useState("");
-  const filteredLogs = logs?.filter((log) => {
-    const lowerSearchTerm = searchTerm.toLowerCase();
-    return (
-      log.title.toLowerCase().includes(lowerSearchTerm) ||
-      log.description.toLowerCase().includes(lowerSearchTerm)
-    );
-  });
+
+  const filteredLogs = useMemo(() => {
+    if (!searchTerm) return logs;
+    return logs?.filter((log) => {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      return (
+        log.title.toLowerCase().includes(lowerSearchTerm) ||
+        log.description.toLowerCase().includes(lowerSearchTerm)
+      );
+    });
+  }, [logs, searchTerm]);
 
   // fetching loader animation
   useEffect(() => {
@@ -212,8 +216,8 @@ const Dashboard = () => {
 
       {/* search logs */}
       {logs.length > 0 && (
-        <div className="search-bar px-3">
-          <div className="relative max-w-md">
+        <div className="search-bar flex justify-center items-center px-3">
+          <div className="w-full relative max-w-md">
             <Search
               size={18}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"

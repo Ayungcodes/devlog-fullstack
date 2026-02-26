@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-const port = 8080;
+const PORT = process.env.PORT || 5000;
 
 import logs from "./routes/logs.js";
 
@@ -11,6 +11,6 @@ app.use(express.json());
 
 app.use("/api/logs", logs);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
