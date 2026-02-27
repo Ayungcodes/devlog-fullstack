@@ -1,9 +1,9 @@
-const API_URL = "http://127.0.0.1:5000/api/logs";
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
 
 // post request to create a log
 export const createLog = async (title, description) => {
   try {
-    const res = await fetch(API_URL, {
+    const res = await fetch(`${API_URL}/api/logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export const createLog = async (title, description) => {
 // get all logs
 export const getLogs = async () => {
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(`${API_URL}/api/logs`);
 
     if (!res.ok) {
       throw new Error(`Server error: ${res.status}`);
@@ -46,7 +46,7 @@ export const getLogs = async () => {
 // update log by id
 export const updateLogService = async (id, updatedData) => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/api/logs/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -64,7 +64,7 @@ export const updateLogService = async (id, updatedData) => {
 // delete log by id
 export const deleteLogService = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/api/logs/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) throw new Error("Failed to delete log");
