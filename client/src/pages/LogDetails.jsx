@@ -71,7 +71,7 @@ const LogDetails = () => {
         ← Back
       </NavLink>
 
-      <div className="details-card bg-white shadow-lg rounded-2xl p-6 border">
+      <div className="details-card bg-white shadow-lg rounded-2xl mt-6 p-6 border">
         <h1 className="text-2xl font-bold mb-2">{log.title}</h1>
 
         <p className="text-sm text-gray-900 mb-6">

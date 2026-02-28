@@ -205,114 +205,119 @@ const Dashboard = () => {
   if (loading) return <PageLoader />;
 
   return (
-    <div>
-      <Navbar openLog={openLog} setOpenLog={setOpenLog} editLog={editLog} />
-      <div className="mt-20 px-3 lg:px-56 py-5">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-gray-600 text-[15px] mt-0.5">
-          Welcome to your DevLog dashboard.
-        </p>
-      </div>
+  <div className="w-full">
+    <Navbar openLog={openLog} setOpenLog={setOpenLog} editLog={editLog} />
 
-      {/* search logs */}
-      {logs.length > 0 && (
-        <div className="search-bar flex justify-center items-center px-3">
-          <div className="w-full relative max-w-md">
-            <Search
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-            <input
-              type="text"
-              name="search"
-              id="search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search logs..."
-              className="
-        w-full
-        pl-10 pr-10 py-2.5
-        text-sm
-        border border-gray-200
-        rounded-xl
-        bg-white
-        outline-none
-        transition-all duration-200
-        focus:border-gray-900
-        focus:ring-2 focus:ring-gray-900/10
-        placeholder:text-gray-400
-      "
-            />
+    {/* header */}
+    <div className="mt-20 w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
+      <p className="text-gray-600 text-sm sm:text-[15px] mt-1">
+        Welcome to your DevLog dashboard.
+      </p>
+    </div>
 
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition"
-              >
-                <X size={16} />
-              </button>
-            )}
-          </div>
+    {/* search logs */}
+    {logs.length > 0 && (
+      <div className="search-bar w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full relative">
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
+
+          <input
+            type="text"
+            name="search"
+            id="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search logs..."
+            className="
+              w-full
+              pl-10 pr-10 py-2.5
+              text-sm
+              border border-gray-200
+              rounded-xl
+              bg-white
+              outline-none
+              transition-all duration-200
+              focus:border-gray-900
+              focus:ring-2 focus:ring-gray-900/10
+              placeholder:text-gray-400
+            "
+          />
+
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
-      )}
+      </div>
+    )}
 
-      <div className="max-w-3xl mx-auto px-3 py-6">
-        {/* log form */}
-        <LogForm
-          openLog={openLog}
-          setOpenLog={setOpenLog}
-          title={title}
-          setTitle={setTitle}
-          description={description}
-          setDescription={setDescription}
-          handleSubmit={handleSubmit}
-        />
-        {/* edit log form */}
-        <EditLog
+    {/* main content */}
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <LogForm
+        openLog={openLog}
+        setOpenLog={setOpenLog}
+        title={title}
+        setTitle={setTitle}
+        description={description}
+        setDescription={setDescription}
+        handleSubmit={handleSubmit}
+      />
+
+      <EditLog
+        editLog={editLog}
+        setEditLog={setEditLog}
+        title={title}
+        setTitle={setTitle}
+        description={description}
+        setDescription={setDescription}
+        updateLog={updateLog}
+      />
+
+      {fetching ? (
+        <div className="flex flex-col items-center justify-center mt-16">
+          <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin"></div>
+          <p className="text-gray-500 mt-3 text-sm">Loading logs...</p>
+        </div>
+      ) : logs.length > 0 ? (
+        <LogList
+          deleteLog={deleteLog}
           editLog={editLog}
           setEditLog={setEditLog}
-          title={title}
-          setTitle={setTitle}
-          description={description}
-          setDescription={setDescription}
-          updateLog={updateLog}
+          handleLogEdit={handleLogEdit}
+          filteredLogs={filteredLogs}
+          className="card"
         />
-        {fetching ? (
-          <div className="flex flex-col items-center justify-center mt-16">
-            <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin"></div>
-            <p className="text-gray-500 mt-3 text-sm">Loading logs...</p>
-          </div>
-        ) : logs.length > 0 ? (
-          <LogList
-            deleteLog={deleteLog}
-            editLog={editLog}
-            setEditLog={setEditLog}
-            handleLogEdit={handleLogEdit}
-            filteredLogs={filteredLogs}
-            className="card"
+      ) : (
+        <div className="text-center mt-16 px-4">
+          <FileText
+            size={40}
+            strokeWidth={1.5}
+            className="empty-icon mx-auto text-gray-400"
           />
-        ) : (
-          <div className="text-center mt-16">
-            <FileText
-              size={40}
-              strokeWidth={1.5}
-              className="empty-icon mx-auto text-gray-400"
-            />
-            <p className="text-gray-600 mt-4">
-              No logs yet. Start documenting your journey.
-            </p>
 
-            <button
-              onClick={() => setOpenLog(true)}
-              className="bg-gray-900 text-white px-4 py-1.5 rounded-lg mt-6 hover:opacity-80 transition cursor-pointer"
-            >
-              Add Your First Log
-            </button>
-          </div>
-        )}
-      </div>
+          <p className="text-gray-600 mt-4 text-sm sm:text-base">
+            No logs yet. Start documenting your journey.
+          </p>
+
+          <button
+            onClick={() => setOpenLog(true)}
+            className="bg-gray-900 text-white px-4 py-2 rounded-lg mt-6 hover:opacity-80 transition cursor-pointer"
+          >
+            Add Your First Log
+          </button>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 };
 
 export default Dashboard;
