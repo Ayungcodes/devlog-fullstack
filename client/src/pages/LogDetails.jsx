@@ -10,8 +10,10 @@ const LogDetails = () => {
   const [loading, setLoading] = useState(true);
 
   const getLogById = async () => {
+    const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
+
     try {
-      const res = await fetch(`http://localhost:8080/api/logs/${id}`);
+      const res = await fetch(`${API_URL}/api/logs/${id}`);
 
       if (!res.ok) {
         throw new Error("Log not found");
@@ -51,12 +53,9 @@ const LogDetails = () => {
 
   if (!log) {
     return (
-      <div className="text-center mt-20">
+      <div className="text-center mt-20 space-y-5">
         <p className="text-gray-900">Log not found.</p>
-        <NavLink
-          to="/"
-          className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg"
-        >
+        <NavLink to="/" className="px-4 py-2 bg-gray-900 text-white rounded-lg">
           Go Back
         </NavLink>
       </div>
